@@ -1,18 +1,18 @@
 /* eslint-disable no-useless-constructor */
 import React from "react";
 import ReactDOM from "react-dom";
+import SeasonDisplay from "./SeasonDisplay";
+import "semantic-ui-css/semantic.min.css";
 
 //transformed the functional component to class based one
 //this is refactoring
 class App extends React.Component {
-  //js
-  constructor(props) {
-    //we need to call super every time we define constructor
-    super(props);
-    //this is the only time we do direct assignment to this.state
-    this.state = { lat: null, errorMessage: "" };
+  state = { lat: null, errorMessage: "" };
 
+  //Lifecycle Methods
+  componentDidMount() {
     //this callback will not run till the we successfully initiliazed the pos.
+
     window.navigator.geolocation.getCurrentPosition(
       (position) => {
         //we called setState
@@ -24,6 +24,11 @@ class App extends React.Component {
     );
   }
 
+  componentDidUpdate() {
+    //Render method is called again here many times
+    console.log("My component was just updated - it rerendered!");
+  }
+
   //we have to define render
   render() {
     if (this.state.errorMessage && !this.state.lat) {
@@ -31,7 +36,9 @@ class App extends React.Component {
     }
 
     if (!this.state.errorMessage && this.state.lat) {
-      return <div>Lattitude: {this.state.lat} </div>;
+      //   return <div>Lattitude: {this.state.lat} </div>;
+      //we give the latitude as props to the SeasonDisplay
+      return <SeasonDisplay lat={this.state.lat} />;
     }
     return <div>Loading</div>;
   }
