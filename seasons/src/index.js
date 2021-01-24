@@ -1,15 +1,40 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+/* eslint-disable no-useless-constructor */
+import React from "react";
+import ReactDOM from "react-dom";
 
+//transformed the functional component to class based one
+//this is refactoring
+class App extends React.Component {
+  //js
+  constructor(props) {
+    //we need to call super every time we define constructor
+    super(props);
+    //this is the only time we do direct assignment to this.state
+    this.state = { lat: null, errorMessage: "" };
 
-const App = () => {
-
+    //this callback will not run till the we successfully initiliazed the pos.
     window.navigator.geolocation.getCurrentPosition(
-        position => console.log(position),
-        err => console.log(err)
+      (position) => {
+        //we called setState
+        this.setState({ lat: position.coords.latitude });
+      },
+      (err) => {
+        this.setState({ errorMessage: err.message });
+      }
     );
+  }
 
-    return <div>Hi there!</div>;
-};
+  //we have to define render
+  render() {
+    if (this.state.errorMessage && !this.state.lat) {
+      return <div>Error: {this.state.errorMessage}</div>;
+    }
 
-ReactDOM.render(<App/>, document.querySelector('#root'));
+    if (!this.state.errorMessage && this.state.lat) {
+      return <div>Lattitude: {this.state.lat} </div>;
+    }
+    return <div>Loading</div>;
+  }
+}
+
+ReactDOM.render(<App />, document.querySelector("#root"));
