@@ -2,6 +2,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import SeasonDisplay from "./SeasonDisplay";
+import Spinner from "./Spinner";
 import "semantic-ui-css/semantic.min.css";
 
 //transformed the functional component to class based one
@@ -29,8 +30,8 @@ class App extends React.Component {
     console.log("My component was just updated - it rerendered!");
   }
 
-  //we have to define render
-  render() {
+  //to be more oriented and general, we create this small function
+  renderContent() {
     if (this.state.errorMessage && !this.state.lat) {
       return <div>Error: {this.state.errorMessage}</div>;
     }
@@ -40,7 +41,15 @@ class App extends React.Component {
       //we give the latitude as props to the SeasonDisplay
       return <SeasonDisplay lat={this.state.lat} />;
     }
-    return <div>Loading</div>;
+
+    //if message is not defined
+    //default prop is passed
+    return <Spinner message="Please accept location request" />;
+  }
+
+  //we have to define render
+  render() {
+    return <div className="border red">{this.renderContent()}</div>;
   }
 }
 
